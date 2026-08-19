@@ -27,7 +27,8 @@
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
-  scroll-padding-top: calc(var(--header-h) + 12px);
+  scroll-padding-top: var(--header-h);
+  overflow-x: clip;
 }
 
 html,
@@ -43,7 +44,7 @@ body {
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img,
@@ -532,10 +533,6 @@ main,
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--teal);
-}
-
-.page-block {
-  scroll-margin-top: calc(var(--header-h) + 12px);
 }
 
 .prose.centered {

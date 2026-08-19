@@ -5,11 +5,22 @@
   const navLinks = document.querySelectorAll(".nav a");
   const sections = document.querySelectorAll("section.page-block[id]");
 
+  const headerOffset = () => (header ? header.offsetHeight : 84);
+
+  const scrollToTarget = (target) => {
+    const media = target.querySelector(".tickets-screen__media");
+    const heading = target.querySelector(".section-title, h2");
+    const focus = media || heading || target;
+    const gap = media ? 0 : 16;
+    const top = window.scrollY + focus.getBoundingClientRect().top - headerOffset() - gap;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  };
+
   const onScroll = () => {
     if (!header) return;
     header.classList.toggle("is-scrolled", window.scrollY > 24);
 
-    const offset = (header.offsetHeight || 84) + 28;
+    const offset = headerOffset() + 24;
     let current = "";
     sections.forEach((section) => {
       if (section.offsetTop <= window.scrollY + offset) {
@@ -31,14 +42,28 @@
       const open = nav.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", String(open));
     });
+  }
 
-    nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const id = (link.getAttribute("href") || "").slice(1);
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+
+      event.preventDefault();
+
+      if (nav && toggle) {
         nav.classList.remove("is-open");
         toggle.setAttribute("aria-expanded", "false");
+      }
+
+      requestAnimationFrame(() => {
+        scrollToTarget(target);
+        history.pushState(null, "", `#${id}`);
       });
     });
-  }
+  });
 
   let modal = document.querySelector("dialog.modal");
   if (!modal) {
