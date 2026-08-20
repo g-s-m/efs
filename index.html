@@ -183,13 +183,7 @@
         </div>
 
         <div class="cta-row">
-          <button
-            class="btn"
-            type="button"
-            data-soon
-            data-soon-title="Подать заявку"
-            data-soon-text="Форма заявки на видеоотбор появится позже. Следите за анонсом."
-          >
+          <button class="btn" type="button" data-apply>
             Подать заявку
           </button>
         </div>
@@ -214,13 +208,7 @@
         </article>
 
         <div class="cta-row">
-          <button
-            class="btn"
-            type="button"
-            data-soon
-            data-soon-title="Подать заявку"
-            data-soon-text="Форма заявки появится позже. Следите за анонсом."
-          >
+          <button class="btn" type="button" data-apply>
             Подать заявку
           </button>
         </div>
@@ -278,6 +266,107 @@
         </article>
       </div>
     </section>
+  </main>
+
+  <dialog class="modal apply-modal" id="apply-form" aria-labelledby="apply-form-title">
+    <form class="apply-form" novalidate>
+      <h2 id="apply-form-title">Подать заявку</h2>
+      <p class="form-lead">Заполните поля для видеоотбора. Чек об оплате прикрепите файлом jpg, png или pdf.</p>
+
+      <label>
+        <span>Ф.И.О. *</span>
+        <input type="text" name="name" autocomplete="name" required>
+      </label>
+
+      <label>
+        <span>Город *</span>
+        <input type="text" name="city" autocomplete="address-level2" required>
+      </label>
+
+      <label>
+        <span>Дата рождения *</span>
+        <input type="date" name="dateOfBirth" autocomplete="bday" required>
+      </label>
+
+      <label>
+        <span>Категория *</span>
+        <select name="category" required>
+          <option value="" disabled selected>Выберите категорию</option>
+          <optgroup label="С пилоном">
+            <option>Erotic pole</option>
+            <option>Exotic old style</option>
+            <option>Polesque</option>
+          </optgroup>
+          <optgroup label="Без пилона">
+            <option>Strip-erotic</option>
+            <option>Burlesque</option>
+            <option>Heels</option>
+            <option>All styles</option>
+          </optgroup>
+        </select>
+      </label>
+
+      <label>
+        <span>Ссылка на видео *</span>
+        <input type="url" name="videoLink" placeholder="https://..." required>
+      </label>
+
+      <label>
+        <span>Танцевальный стаж *</span>
+        <input type="text" name="experience" placeholder="Например: 3 года" required>
+      </label>
+
+      <label>
+        <span>Уровень *</span>
+        <select name="level" required>
+          <option value="" disabled selected>Выберите уровень</option>
+          <option>Начинающий</option>
+          <option>Любитель</option>
+          <option>Полупрофессионал</option>
+          <option>Профессионал</option>
+          <option>Старс</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Контактный телефон *</span>
+        <input type="tel" name="phone" autocomplete="tel" placeholder="+7 (921) 000-00-00" required>
+      </label>
+
+      <div class="form-row">
+        <label>
+          <span>Ссылка ВКонтакте</span>
+          <input type="text" name="vkLink" placeholder="https://vk.com/...">
+        </label>
+        <label>
+          <span>Ссылка в Telegram</span>
+          <input type="text" name="tgLink" placeholder="https://t.me/... или @username">
+        </label>
+      </div>
+      <p class="form-hint">Нужна хотя бы одна ссылка: ВКонтакте или Telegram.</p>
+
+      <label class="file-field">
+        <span>Чек об оплате видеоотбора *</span>
+        <input type="file" name="receipt" accept="image/jpeg,image/png,.jpg,.jpeg,.png,.pdf,application/pdf" required>
+        <span class="file-drop">Нажмите, чтобы выбрать jpg, png или pdf</span>
+      </label>
+      <div class="file-progress" data-file-progress hidden>
+        <span class="file-spinner" aria-hidden="true"></span>
+        <div class="file-progress__track">
+          <div class="file-progress__bar" data-file-bar></div>
+        </div>
+        <p class="file-progress__label" data-file-label>0%</p>
+      </div>
+
+      <p class="form-error" data-form-error hidden></p>
+      <p class="form-ok" data-form-ok hidden>Заявка отправлена. Мы свяжемся с вами после проверки.</p>
+
+      <div class="form-actions">
+        <button class="btn" type="submit" data-submit>Отправить</button>
+        <button class="btn btn-ghost" type="button" data-close>Закрыть</button>
+      </div>
+    </form>
+  </dialog>
 
   <footer class="site-footer">
     <div class="brand">ERA FESTIVAL</div>
@@ -285,6 +374,7 @@
     <p>Организаторы: Olga Vaga и Алёна Go</p>
   </footer>
 
+  <script src="js/config.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

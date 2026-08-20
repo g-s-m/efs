@@ -938,6 +938,12 @@ dialog.modal {
   box-shadow: var(--glow);
 }
 
+dialog.apply-modal {
+  width: min(560px, calc(100% - 24px));
+  max-height: min(92vh, 900px);
+  overflow: auto;
+}
+
 dialog.modal::backdrop {
   background: rgba(0, 0, 0, 0.72);
 }
@@ -957,6 +963,181 @@ dialog.modal::backdrop {
 .modal-inner p {
   color: var(--silver);
   margin: 0 0 24px;
+}
+
+.apply-form {
+  padding: 28px 24px 24px;
+  text-align: left;
+}
+
+.apply-form h2 {
+  font-family: var(--font-display);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0 0 10px;
+}
+
+.form-lead,
+.form-hint {
+  color: var(--silver-dim);
+  font-size: 0.9rem;
+  margin: 0 0 20px;
+}
+
+.form-hint {
+  margin: -8px 0 18px;
+}
+
+.apply-form label {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.apply-form label span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.apply-form input,
+.apply-form select {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(8, 10, 12, 0.9);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.apply-form input:focus,
+.apply-form select:focus {
+  outline: 1px solid var(--teal);
+  border-color: rgba(62, 232, 200, 0.55);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.file-field {
+  position: relative;
+}
+
+.file-field input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-drop {
+  display: grid;
+  place-items: center;
+  min-height: 72px;
+  padding: 12px;
+  border: 1px dashed rgba(62, 232, 200, 0.35);
+  border-radius: 12px;
+  color: var(--silver);
+  text-align: center;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.92rem !important;
+}
+
+.file-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: -6px 0 18px;
+}
+
+.file-progress[hidden] {
+  display: none;
+}
+
+.file-spinner {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 2px solid rgba(62, 232, 200, 0.2);
+  border-top-color: var(--teal);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.file-progress.is-ready .file-spinner {
+  animation: none;
+  border-color: var(--teal);
+  background: var(--teal);
+}
+
+.file-progress.is-error .file-spinner {
+  animation: none;
+  border-color: #ffb4b4;
+}
+
+.file-progress__track {
+  flex: 1;
+  height: 6px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.file-progress__bar {
+  width: 0;
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--teal-2), var(--teal));
+  transition: width 0.2s ease;
+}
+
+.file-progress__label {
+  margin: 0;
+  min-width: 3.2em;
+  font-size: 0.82rem;
+  color: var(--silver);
+  text-align: right;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.form-error {
+  color: #ffb4b4;
+  margin: 0 0 12px;
+}
+
+.form-ok {
+  color: var(--teal-soft);
+  margin: 0 0 12px;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.form-actions .btn[disabled] {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.form-actions .btn[hidden] {
+  display: none !important;
 }
 
 .reveal {
@@ -1108,6 +1289,14 @@ dialog.modal::backdrop {
 
   .inner-hero h1 {
     letter-spacing: 0.14em;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .apply-form {
+    padding: 22px 16px 18px;
   }
 }
 
