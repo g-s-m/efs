@@ -233,7 +233,13 @@
   };
 
   const postToGas = async (url, payload) => {
-    const query = new URLSearchParams({ payload: JSON.stringify(payload) }).toString();
+    const query = new URLSearchParams({
+      payload: JSON.stringify(payload),
+      alias: payload.alias || "",
+      genre: payload.genre || "",
+      teachingExperience: payload.teachingExperience || "",
+      igLink: payload.igLink || ""
+    }).toString();
     console.log("[ERA] save row", payload);
     await getGas(url + "?" + query);
   };

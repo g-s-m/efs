@@ -252,24 +252,31 @@ function logRequest_(e) {
 }
 
 function parsePayload_(e) {
+  let data = {};
   if (e && e.parameter && e.parameter.payload) {
-    return JSON.parse(e.parameter.payload);
+    data = JSON.parse(e.parameter.payload);
+  } else if (e && e.parameter && e.parameter.name) {
+    data = e.parameter;
+  } else {
+    const raw = (e && e.postData && e.postData.contents) || "";
+    if (!raw) {
+      throw new Error("Пустой запрос");
+    }
+    if (raw.indexOf("payload=") === 0) {
+      data = JSON.parse(decodeURIComponent(raw.slice("payload=".length).replace(/\+/g, " ")));
+    } else {
+      data = JSON.parse(raw);
+    }
   }
 
-  if (e && e.parameter && e.parameter.name) {
-    return e.parameter;
+  const params = (e && e.parameter) || {};
+  if (!data.alias && params.alias) data.alias = params.alias;
+  if (!data.genre && params.genre) data.genre = params.genre;
+  if (!data.teachingExperience && params.teachingExperience) {
+    data.teachingExperience = params.teachingExperience;
   }
-
-  const raw = (e && e.postData && e.postData.contents) || "";
-  if (!raw) {
-    throw new Error("Пустой запрос");
-  }
-
-  if (raw.indexOf("payload=") === 0) {
-    return JSON.parse(decodeURIComponent(raw.slice("payload=".length).replace(/\+/g, " ")));
-  }
-
-  return JSON.parse(raw);
+  if (!data.igLink && params.igLink) data.igLink = params.igLink;
+  return data;
 }
 
 const SHEET_HEADERS = [
@@ -291,31 +298,69 @@ const SHEET_HEADERS = [
   "Телефон"
 ];
 
-function ensureHeaders_(sheet) {
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(SHEET_HEADERS);
-    return;
+function headerIndex_(headers, name) {
+  for (let i = 0; i < headers.length; i++) {
+    if (String(headers[i] || "").trim() === name) return i;
   }
+  return -1;
+}
+
+function readHeaders_(sheet) {
   const lastCol = Math.max(sheet.getLastColumn(), 1);
-  const existing = sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(function (value) {
-    return String(value).trim();
-  });
-  SHEET_HEADERS.forEach(function (name) {
-    if (existing.indexOf(name) === -1) {
-      existing.push(name);
-      sheet.getRange(1, existing.length).setValue(name);
-    }
+  return sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(function (value) {
+    return String(value || "").trim();
   });
 }
 
+function insertHeaderAfter_(sheet, afterName, newName) {
+  let headers = readHeaders_(sheet);
+  if (headerIndex_(headers, newName) !== -1) return;
+  const after = headerIndex_(headers, afterName);
+  const col = after === -1 ? headers.length + 1 : after + 2;
+  if (col <= sheet.getLastColumn()) {
+    sheet.insertColumnBefore(col);
+  }
+  sheet.getRange(1, col).setValue(newName);
+}
+
+function ensureHeaders_(sheet) {
+  if (sheet.getLastRow() === 0 || sheet.getLastColumn() === 0) {
+    sheet.getRange(1, 1, 1, SHEET_HEADERS.length).setValues([SHEET_HEADERS]);
+    SpreadsheetApp.flush();
+    return;
+  }
+  insertHeaderAfter_(sheet, "ФИО", "Псевдоним");
+  insertHeaderAfter_(sheet, "Уровень", "Жанр");
+  insertHeaderAfter_(sheet, "Стаж", "Преподавательский стаж");
+  insertHeaderAfter_(sheet, "Telegram", "Instagram");
+  SHEET_HEADERS.forEach(function (name) {
+    const headers = readHeaders_(sheet);
+    if (headerIndex_(headers, name) === -1) {
+      sheet.getRange(1, headers.length + 1).setValue(name);
+    }
+  });
+  SpreadsheetApp.flush();
+}
+
+function cellValue_(values, key) {
+  const value = values[key];
+  return value === undefined || value === null ? "" : value;
+}
+
 function writeSheetRow_(sheet, values) {
-  const lastCol = Math.max(sheet.getLastColumn(), SHEET_HEADERS.length);
-  const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  const headers = readHeaders_(sheet);
   const row = headers.map(function (header) {
-    const key = String(header).trim();
-    return values.hasOwnProperty(key) ? values[key] : "";
+    return header ? cellValue_(values, header) : "";
   });
   sheet.appendRow(row);
+  SpreadsheetApp.flush();
+  const rowNumber = sheet.getLastRow();
+  ["Псевдоним", "Жанр", "Преподавательский стаж", "Instagram"].forEach(function (name) {
+    const index = headerIndex_(headers, name);
+    if (index !== -1) {
+      sheet.getRange(rowNumber, index + 1).setValue(cellValue_(values, name));
+    }
+  });
 }
 
 function saveChunk_(p) {
