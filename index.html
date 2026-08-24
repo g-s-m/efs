@@ -103,19 +103,34 @@
             <h3>С пилоном</h3>
             <p class="hint">Pole</p>
             <div class="chips">
-              <span class="chip">Erotic pole</span>
-              <span class="chip">Exotic old style</span>
-              <span class="chip">Polesque</span>
+              <span class="chip">Exotic</span>
+              <span class="chip">Erotic</span>
+              <span class="chip">Exotic Battle</span>
+              <span class="chip">Erotic Battle</span>
             </div>
           </div>
           <div class="dir-col">
             <h3>Без пилона</h3>
             <p class="hint">Floor &amp; heels</p>
             <div class="chips">
-              <span class="chip">Strip-erotic</span>
-              <span class="chip">Burlesque</span>
+              <span class="chip">Strip</span>
               <span class="chip">Heels</span>
-              <span class="chip">All styles</span>
+              <span class="chip">Strip/Heels Battle</span>
+            </div>
+          </div>
+          <div class="dir-col dir-col--genres">
+            <h3>Жанры</h3>
+            <p class="hint">Образ и тема номера</p>
+            <div class="chips">
+              <span class="chip">Кино</span>
+              <span class="chip">Литература</span>
+              <span class="chip">Hardcore</span>
+              <span class="chip">Noir</span>
+              <span class="chip">Classic</span>
+              <span class="chip">Arthouse</span>
+              <span class="chip">Fantasy</span>
+              <span class="chip">Burlesque</span>
+              <span class="chip">History</span>
             </div>
           </div>
         </div>
@@ -137,7 +152,14 @@
       <div class="wrap">
         <div class="section-head">
           <h2 class="section-title">Правила фестиваля</h2>
+          <p class="lede">Полный текст правил, условия участия и ответы на частые вопросы — в официальной теме сообщества.</p>
         </div>
+        <a class="rules-card" href="https://vk.ru/topic-240938955_67343217" target="_blank" rel="noopener noreferrer">
+          <p class="kicker">ВКонтакте</p>
+          <h3>Правила ERA Festival</h3>
+          <p>Откройте тему обсуждения, чтобы прочитать регламент фестиваля.</p>
+          <span class="rules-card__action">Читать правила</span>
+        </a>
       </div>
     </section>
 
@@ -274,62 +296,91 @@
       <p class="form-lead">Заполните поля для видеоотбора. Чек об оплате прикрепите файлом jpg, png или pdf.</p>
 
       <label>
-        <span>Ф.И.О. *</span>
+        <span>Ф.И.О.</span>
         <input type="text" name="name" autocomplete="name" required>
       </label>
 
       <label>
-        <span>Город *</span>
+        <span>Псевдоним</span>
+        <input type="text" name="alias" autocomplete="nickname" placeholder="Если есть">
+      </label>
+
+      <label>
+        <span>Город</span>
         <input type="text" name="city" autocomplete="address-level2" required>
       </label>
 
       <label>
-        <span>Дата рождения *</span>
+        <span>Дата рождения</span>
         <input type="date" name="dateOfBirth" autocomplete="bday" required>
       </label>
 
       <label>
-        <span>Категория *</span>
+        <span>Категория</span>
         <select name="category" required>
           <option value="" disabled selected>Выберите категорию</option>
           <optgroup label="С пилоном">
-            <option>Erotic pole</option>
-            <option>Exotic old style</option>
-            <option>Polesque</option>
+            <option>Exotic</option>
+            <option>Erotic</option>
+            <option>Exotic Battle</option>
+            <option>Erotic Battle</option>
           </optgroup>
           <optgroup label="Без пилона">
-            <option>Strip-erotic</option>
-            <option>Burlesque</option>
+            <option>Strip</option>
             <option>Heels</option>
-            <option>All styles</option>
+            <option>Strip/Heels Battle</option>
           </optgroup>
         </select>
       </label>
 
       <label>
-        <span>Ссылка на видео *</span>
-        <input type="url" name="videoLink" placeholder="https://..." required>
-      </label>
-
-      <label>
-        <span>Танцевальный стаж *</span>
-        <input type="text" name="experience" placeholder="Например: 3 года" required>
-      </label>
-
-      <label>
-        <span>Уровень *</span>
+        <span>Уровень</span>
         <select name="level" required>
           <option value="" disabled selected>Выберите уровень</option>
+          <option>Дебют</option>
           <option>Начинающий</option>
           <option>Любитель</option>
           <option>Полупрофессионал</option>
           <option>Профессионал</option>
           <option>Старс</option>
+          <option>Дуэты</option>
+          <option>Группы</option>
         </select>
       </label>
 
       <label>
-        <span>Контактный телефон *</span>
+        <span>Жанр</span>
+        <select name="genre" required>
+          <option value="" disabled selected>Выберите жанр</option>
+          <option>Кино</option>
+          <option>Литература</option>
+          <option>Hardcore</option>
+          <option>Noir</option>
+          <option>Classic</option>
+          <option>Arthouse</option>
+          <option>Fantasy</option>
+          <option>Burlesque</option>
+          <option>History</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Ссылка на видео</span>
+        <input type="url" name="videoLink" placeholder="https://..." required>
+      </label>
+
+      <label>
+        <span>Танцевальный стаж</span>
+        <input type="text" name="experience" placeholder="Например: 3 года" required>
+      </label>
+
+      <label>
+        <span>Преподавательский стаж</span>
+        <input type="text" name="teachingExperience" placeholder="Если преподаёте">
+      </label>
+
+      <label>
+        <span>Контактный телефон</span>
         <input type="tel" name="phone" autocomplete="tel" placeholder="+7 (921) 000-00-00" required>
       </label>
 
@@ -343,10 +394,14 @@
           <input type="text" name="tgLink" placeholder="https://t.me/... или @username">
         </label>
       </div>
-      <p class="form-hint">Нужна хотя бы одна ссылка: ВКонтакте или Telegram.</p>
+      <label>
+        <span>Ссылка на Instagram*</span>
+        <input type="text" name="igLink" placeholder="https://instagram.com/...">
+      </label>
+      <p class="form-hint">Нужна хотя бы одна ссылка: VK, Telegram или Instagram.</p>
 
       <label class="file-field">
-        <span>Чек об оплате видеоотбора *</span>
+        <span>Чек об оплате видеоотбора</span>
         <input type="file" name="receipt" accept="image/jpeg,image/png,.jpg,.jpeg,.png,.pdf,application/pdf" required>
         <span class="file-drop">Нажмите, чтобы выбрать jpg, png или pdf</span>
       </label>
@@ -365,6 +420,7 @@
         <button class="btn" type="submit" data-submit>Отправить</button>
         <button class="btn btn-ghost" type="button" data-close>Закрыть</button>
       </div>
+      <p class="form-legal">* — признана экстремистской организацией на территории РФ</p>
     </form>
   </dialog>
 

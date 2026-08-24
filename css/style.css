@@ -545,6 +545,10 @@ main,
   gap: 28px;
 }
 
+.dir-col--genres {
+  grid-column: 1 / -1;
+}
+
 .dir-col {
   padding: 32px 28px 28px;
   border-radius: 22px;
@@ -582,6 +586,59 @@ main,
   font-size: 0.88rem;
   letter-spacing: 0.04em;
   background: rgba(62, 232, 200, 0.05);
+}
+
+.rules-card {
+  display: block;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 36px 32px 32px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at top right, rgba(62, 232, 200, 0.14), transparent 46%),
+    rgba(8, 10, 12, 0.75);
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.rules-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(62, 232, 200, 0.45);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35), 0 0 32px rgba(62, 232, 200, 0.12);
+}
+
+.rules-card .kicker {
+  margin-bottom: 10px;
+}
+
+.rules-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+.rules-card p {
+  margin: 0 0 22px;
+  color: var(--silver);
+}
+
+.rules-card__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(62, 232, 200, 0.55);
+  color: var(--white);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
 }
 
 .portals {
@@ -989,6 +1046,15 @@ dialog.modal::backdrop {
   margin: -8px 0 18px;
 }
 
+.form-legal {
+  margin: 16px 0 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--silver-dim);
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
 .apply-form label {
   display: block;
   margin-bottom: 14px;
@@ -1293,6 +1359,10 @@ dialog.modal::backdrop {
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .rules-card {
+    padding: 28px 18px 24px;
   }
 
   .apply-form {

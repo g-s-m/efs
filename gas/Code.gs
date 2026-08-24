@@ -1,7 +1,7 @@
-const TABLE_ID = "17MZ9t_IEDaeqV6GSRb8Kbk1VXnpEGtX3EidkBkdxpZM";
+const TABLE_ID = "1-TKbdrgaS0gW7lfnH20Wi8OhlTszzq4CwvlA5tqZUtk";
 const SHEET_NAME = "apply";
-const RECEIPTS_FOLDER = "1VKPS2u7AeWXR4pGTTV4BuLdudIbDcbDM";
-const CHUNKS_FOLDER = "1yAvHCdn_8Y8oErg38cl-_a9vE9Pghyc8";
+const RECEIPTS_FOLDER = "1XpiMCwIlNlmHvqjXUWzshdeFC5HBfJS7";
+const CHUNKS_FOLDER = "14aDveacWmXw4wGnvl2VeyMUreLJvpImw";
 
 function doGet(e) {
   console.log("doGet called");
@@ -31,14 +31,18 @@ function testWrite() {
     parameter: {
       payload: JSON.stringify({
         name: "TEST",
+        alias: "",
         city: "Санкт-Петербург",
         dateOfBirth: "1990-01-01",
         category: "Heels",
+        level: "Любитель",
+        genre: "Classic",
         videoLink: "https://example.com/video",
         experience: "1 год",
-        level: "Любитель",
+        teachingExperience: "",
         vkLink: "https://vk.com/test",
         tgLink: "",
+        igLink: "",
         phone: "+79990000000"
       })
     }
@@ -90,14 +94,18 @@ function testReceiptWrite() {
     parameter: {
       payload: JSON.stringify({
         name: "TEST RECEIPT",
+        alias: "",
         city: "Санкт-Петербург",
         dateOfBirth: "1990-01-01",
         category: "Heels",
+        level: "Любитель",
+        genre: "Classic",
         videoLink: "https://example.com/video",
         experience: "1 год",
-        level: "Любитель",
+        teachingExperience: "",
         vkLink: "https://vk.com/test",
         tgLink: "",
+        igLink: "",
         phone: "+79990000000",
         uploadId: id,
         chunkTotal: total,
@@ -125,14 +133,18 @@ function save_(e) {
     Logger.log("parsed keys: " + Object.keys(data).join(", "));
     Logger.log("fields: " + JSON.stringify({
       name: data.name || "",
+      alias: data.alias || "",
       city: data.city || "",
       dateOfBirth: data.dateOfBirth || "",
       category: data.category || "",
+      level: data.level || "",
+      genre: data.genre || "",
       videoLink: data.videoLink || "",
       experience: data.experience || "",
-      level: data.level || "",
+      teachingExperience: data.teachingExperience || "",
       vkLink: data.vkLink || "",
       tgLink: data.tgLink || "",
+      igLink: data.igLink || "",
       phone: data.phone || "",
       tableId: data.tableId || "",
       sheetName: data.sheetName || "",
@@ -192,37 +204,25 @@ function save_(e) {
 
     Logger.log("sheet lastRow before: " + sheet.getLastRow());
 
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "Дата",
-        "ФИО",
-        "Город",
-        "Дата рождения",
-        "Категория",
-        "Ссылка на видео",
-        "Стаж",
-        "Уровень",
-        "VK",
-        "Telegram",
-        "Чек",
-        "Телефон"
-      ]);
-    }
-
-    sheet.appendRow([
-      new Date(),
-      data.name || "",
-      data.city || "",
-      data.dateOfBirth || "",
-      data.category || "",
-      data.videoLink || "",
-      data.experience || "",
-      data.level || "",
-      data.vkLink || "",
-      data.tgLink || "",
-      paymentUrl,
-      data.phone || ""
-    ]);
+    ensureHeaders_(sheet);
+    writeSheetRow_(sheet, {
+      "Дата": new Date(),
+      "ФИО": data.name || "",
+      "Псевдоним": data.alias || "",
+      "Город": data.city || "",
+      "Дата рождения": data.dateOfBirth || "",
+      "Категория": data.category || "",
+      "Уровень": data.level || "",
+      "Жанр": data.genre || "",
+      "Ссылка на видео": data.videoLink || "",
+      "Стаж": data.experience || "",
+      "Преподавательский стаж": data.teachingExperience || "",
+      "VK": data.vkLink || "",
+      "Telegram": data.tgLink || "",
+      "Instagram": data.igLink || "",
+      "Чек": paymentUrl,
+      "Телефон": data.phone || ""
+    });
 
     Logger.log("sheet lastRow after: " + sheet.getLastRow());
     Logger.log("=== save_ ok ===");
@@ -270,6 +270,52 @@ function parsePayload_(e) {
   }
 
   return JSON.parse(raw);
+}
+
+const SHEET_HEADERS = [
+  "Дата",
+  "ФИО",
+  "Псевдоним",
+  "Город",
+  "Дата рождения",
+  "Категория",
+  "Уровень",
+  "Жанр",
+  "Ссылка на видео",
+  "Стаж",
+  "Преподавательский стаж",
+  "VK",
+  "Telegram",
+  "Instagram",
+  "Чек",
+  "Телефон"
+];
+
+function ensureHeaders_(sheet) {
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(SHEET_HEADERS);
+    return;
+  }
+  const lastCol = Math.max(sheet.getLastColumn(), 1);
+  const existing = sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(function (value) {
+    return String(value).trim();
+  });
+  SHEET_HEADERS.forEach(function (name) {
+    if (existing.indexOf(name) === -1) {
+      existing.push(name);
+      sheet.getRange(1, existing.length).setValue(name);
+    }
+  });
+}
+
+function writeSheetRow_(sheet, values) {
+  const lastCol = Math.max(sheet.getLastColumn(), SHEET_HEADERS.length);
+  const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  const row = headers.map(function (header) {
+    const key = String(header).trim();
+    return values.hasOwnProperty(key) ? values[key] : "";
+  });
+  sheet.appendRow(row);
 }
 
 function saveChunk_(p) {

@@ -349,18 +349,22 @@
 
       const data = new FormData(applyForm);
       const name = String(data.get("name") || "").trim();
+      const alias = String(data.get("alias") || "").trim();
       const city = String(data.get("city") || "").trim();
       const dateOfBirth = String(data.get("dateOfBirth") || "").trim();
       const category = String(data.get("category") || "").trim();
+      const level = String(data.get("level") || "").trim();
+      const genre = String(data.get("genre") || "").trim();
       const videoLink = String(data.get("videoLink") || "").trim();
       const experience = String(data.get("experience") || "").trim();
-      const level = String(data.get("level") || "").trim();
+      const teachingExperience = String(data.get("teachingExperience") || "").trim();
       const phone = String(data.get("phone") || "").trim();
       const vkLink = String(data.get("vkLink") || "").trim();
       const tgLink = String(data.get("tgLink") || "").trim();
+      const igLink = String(data.get("igLink") || "").trim();
       const receipt = fileInput && fileInput.files && fileInput.files[0];
 
-      if (!name || !city || !dateOfBirth || !category || !videoLink || !experience || !level || !phone) {
+      if (!name || !city || !dateOfBirth || !category || !level || !genre || !videoLink || !experience || !phone) {
         showError("Заполните все обязательные поля.");
         return;
       }
@@ -395,15 +399,19 @@
           tableId: cfg.tableId,
           sheetName: cfg.sheetName || "apply",
           name,
+          alias,
           city,
           dateOfBirth,
           category,
+          level,
+          genre,
           videoLink,
           experience,
-          level,
+          teachingExperience,
           phone,
           vkLink,
           tgLink,
+          igLink,
           uploadId: receiptState.uploadId,
           chunkTotal: receiptState.chunkTotal,
           receiptName: original.indexOf(person) === 0 ? original : person + "_" + original,
