@@ -73,6 +73,7 @@
   const submitBtn = applyForm && applyForm.querySelector("[data-submit]");
   const fileDrop = applyForm && applyForm.querySelector(".file-drop");
   const fileInput = applyForm && applyForm.querySelector('input[name="receipt"]');
+  const rulesCheckbox = applyForm && applyForm.querySelector('[name="rulesAccepted"]');
 
   let formSent = false;
 
@@ -84,7 +85,6 @@
     }
     if (submitBtn) {
       submitBtn.hidden = false;
-      submitBtn.disabled = false;
       submitBtn.textContent = "Отправить";
     }
     if (formSent && applyForm) {
@@ -92,6 +92,7 @@
       resetReceiptUi();
       formSent = false;
     }
+    syncSubmitEnabled();
   };
 
   document.querySelectorAll("[data-apply]").forEach((el) => {
@@ -244,9 +245,19 @@
     await getGas(url + "?" + query);
   };
 
-  const setSubmitBusy = (busy) => {
+  const syncSubmitEnabled = () => {
     if (!submitBtn) return;
-    submitBtn.disabled = busy;
+    const rulesOk = !!(rulesCheckbox && rulesCheckbox.checked);
+    const uploading = receiptState.status === "uploading";
+    submitBtn.disabled = !rulesOk || uploading || formSent;
+  };
+
+  const setSubmitBusy = (busy) => {
+    if (busy && submitBtn) {
+      submitBtn.disabled = true;
+      return;
+    }
+    syncSubmitEnabled();
   };
 
   const uploadReceipt = async (file) => {
@@ -348,6 +359,16 @@
   }
 
   if (applyForm) {
+    const rulesLink = applyForm.querySelector(".check-field a");
+    if (rulesLink) {
+      rulesLink.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+    }
+    if (rulesCheckbox) {
+      rulesCheckbox.addEventListener("change", syncSubmitEnabled);
+    }
+
     applyForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       showError("");
@@ -380,6 +401,10 @@
       }
       if (!receipt) {
         showError("Прикрепите файл jpg, png или pdf.");
+        return;
+      }
+      if (!applyForm.querySelector('[name="rulesAccepted"]').checked) {
+        showError("Подтвердите, что вы ознакомились с правилами фестиваля.");
         return;
       }
       if (receiptState.status === "uploading") {
@@ -435,8 +460,8 @@
         showError("Не удалось отправить заявку. Попробуйте ещё раз.");
       } finally {
         if (!formSent) {
-          submitBtn.disabled = false;
           submitBtn.textContent = "Отправить";
+          syncSubmitEnabled();
         }
       }
     });
