@@ -245,6 +245,54 @@
     await getGas(url + "?" + query);
   };
 
+  const mailList = () =>
+    (Array.isArray(cfg.mailTo) ? cfg.mailTo : [])
+      .map((item) => String(item || "").trim())
+      .filter(Boolean);
+
+  const sendWeb3Forms = async (payload) => {
+    const key = String(cfg.web3formsKey || "").trim();
+    if (!key || key.includes("YOUR_ACCESS_KEY")) {
+      console.warn("[ERA] Web3Forms: нет access key в js/config.js");
+      return;
+    }
+
+    const body = {
+      access_key: key,
+      subject: "Заявка ERA Festival: " + (payload.name || ""),
+      from_name: "ERA Festival",
+      "Дата": new Date().toLocaleString("ru-RU"),
+      "ФИО": payload.name || "",
+      "Псевдоним": payload.alias || "",
+      "Город": payload.city || "",
+      "Дата рождения": payload.dateOfBirth || "",
+      "Категория": payload.category || "",
+      "Уровень": payload.level || "",
+      "Жанр": payload.genre || "",
+      "Ссылка на видео": payload.videoLink || "",
+      "Стаж": payload.experience || "",
+      "Преподавательский стаж": payload.teachingExperience || "",
+      "VK": payload.vkLink || "",
+      "Telegram": payload.tgLink || "",
+      "Instagram": payload.igLink || "",
+      "Чек": payload.receiptName || "файл загружен, ссылка в таблице",
+      "Телефон": payload.phone || ""
+    };
+
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || result.success === false) {
+      throw new Error(result.message || "Web3Forms error");
+    }
+  };
+
   const syncSubmitEnabled = () => {
     if (!submitBtn) return;
     const rulesOk = !!(rulesCheckbox && rulesCheckbox.checked);
@@ -450,6 +498,11 @@
         };
 
         await postToGas(cfg.gasUrl, payload);
+        try {
+          await sendWeb3Forms(payload);
+        } catch (mailErr) {
+          console.warn("[ERA] mail failed", mailErr);
+        }
 
         formSent = true;
         applyForm.reset();
