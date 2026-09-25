@@ -239,7 +239,8 @@
       alias: payload.alias || "",
       genre: payload.genre || "",
       teachingExperience: payload.teachingExperience || "",
-      igLink: payload.igLink || ""
+      igLink: payload.igLink || "",
+      email: payload.email || ""
     }).toString();
     console.log("[ERA] save row", payload);
     await getGas(url + "?" + query);
@@ -257,6 +258,7 @@
       return;
     }
 
+    const recipients = mailList();
     const body = {
       access_key: key,
       subject: "Заявка ERA Festival: " + (payload.name || ""),
@@ -276,8 +278,13 @@
       "Telegram": payload.tgLink || "",
       "Instagram": payload.igLink || "",
       "Чек": payload.receiptName || "файл загружен, ссылка в таблице",
-      "Телефон": payload.phone || ""
+      "Телефон": payload.phone || "",
+      "E-mail": payload.email || "",
+      email: payload.email || ""
     };
+    if (recipients.length > 1) {
+      body.ccemail = recipients.slice(1).join(";");
+    }
 
     const response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
@@ -434,13 +441,18 @@
       const experience = String(data.get("experience") || "").trim();
       const teachingExperience = String(data.get("teachingExperience") || "").trim();
       const phone = String(data.get("phone") || "").trim();
+      const email = String(data.get("email") || "").trim();
       const vkLink = String(data.get("vkLink") || "").trim();
       const tgLink = String(data.get("tgLink") || "").trim();
       const igLink = String(data.get("igLink") || "").trim();
       const receipt = fileInput && fileInput.files && fileInput.files[0];
 
-      if (!name || !city || !dateOfBirth || !category || !level || !genre || !videoLink || !experience || !phone) {
+      if (!name || !city || !dateOfBirth || !category || !level || !genre || !videoLink || !experience || !phone || !email) {
         showError("Заполните все обязательные поля.");
+        return;
+      }
+      if (email.indexOf("@") < 1) {
+        showError("Укажите корректный e-mail.");
         return;
       }
       if (!vkLink && !tgLink) {
@@ -488,6 +500,7 @@
           experience,
           teachingExperience,
           phone,
+          email,
           vkLink,
           tgLink,
           igLink,

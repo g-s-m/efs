@@ -43,7 +43,8 @@ function testWrite() {
         vkLink: "https://vk.com/test",
         tgLink: "",
         igLink: "",
-        phone: "+79990000000"
+        phone: "+79990000000",
+        email: "test@example.com"
       })
     }
   });
@@ -107,6 +108,7 @@ function testReceiptWrite() {
         tgLink: "",
         igLink: "",
         phone: "+79990000000",
+        email: "test@example.com",
         uploadId: id,
         chunkTotal: total,
         receiptName: "test-receipt.jpg",
@@ -146,6 +148,7 @@ function save_(e) {
       tgLink: data.tgLink || "",
       igLink: data.igLink || "",
       phone: data.phone || "",
+      email: data.email || "",
       tableId: data.tableId || "",
       sheetName: data.sheetName || "",
       receiptName: data.receiptName || "",
@@ -221,7 +224,8 @@ function save_(e) {
       "Telegram": data.tgLink || "",
       "Instagram": data.igLink || "",
       "Чек": paymentUrl,
-      "Телефон": data.phone || ""
+      "Телефон": data.phone || "",
+      "E-mail": data.email || ""
     });
 
     Logger.log("sheet lastRow after: " + sheet.getLastRow());
@@ -276,6 +280,7 @@ function parsePayload_(e) {
     data.teachingExperience = params.teachingExperience;
   }
   if (!data.igLink && params.igLink) data.igLink = params.igLink;
+  if (!data.email && params.email) data.email = params.email;
   return data;
 }
 
@@ -295,7 +300,8 @@ const SHEET_HEADERS = [
   "Telegram",
   "Instagram",
   "Чек",
-  "Телефон"
+  "Телефон",
+  "E-mail"
 ];
 
 function headerIndex_(headers, name) {
@@ -333,6 +339,7 @@ function ensureHeaders_(sheet) {
   insertHeaderAfter_(sheet, "Уровень", "Жанр");
   insertHeaderAfter_(sheet, "Стаж", "Преподавательский стаж");
   insertHeaderAfter_(sheet, "Telegram", "Instagram");
+  insertHeaderAfter_(sheet, "Телефон", "E-mail");
   SHEET_HEADERS.forEach(function (name) {
     const headers = readHeaders_(sheet);
     if (headerIndex_(headers, name) === -1) {
@@ -355,7 +362,7 @@ function writeSheetRow_(sheet, values) {
   sheet.appendRow(row);
   SpreadsheetApp.flush();
   const rowNumber = sheet.getLastRow();
-  ["Псевдоним", "Жанр", "Преподавательский стаж", "Instagram"].forEach(function (name) {
+  ["Псевдоним", "Жанр", "Преподавательский стаж", "Instagram", "E-mail"].forEach(function (name) {
     const index = headerIndex_(headers, name);
     if (index !== -1) {
       sheet.getRange(rowNumber, index + 1).setValue(cellValue_(values, name));
